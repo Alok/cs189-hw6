@@ -1,0 +1,14 @@
+*.fls
+*.fdb_latexmk
+*.log
+*.out
+*.pdfsync
+*synctex*
+*.lprof
+*.zip
+*.aux
+*.temp
+*.lock
+tags
+*.pdf
+*.csv
