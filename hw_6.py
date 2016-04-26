@@ -86,6 +86,8 @@ class NeuralNetwork(object):
         tanhDeriv = np.dot(self.W.T, sigmoidAndLossDeriv) * s_prime(self.Vforward)
 
         dJdV = np.dot(tanhDeriv, inputsWAddedCol)
+        print("dJdV: {}".format(dJdV))
+        print("np.unique(dJdV): {}".format(np.unique(dJdV)))
         return dJdW, dJdV
 
     def crossEntropyLoss(self, inputs, labels):
@@ -171,4 +173,5 @@ if loop:
 
 net =  NeuralNetwork('testnetwork')
 net.forward(data)
+net.backpropMeanSquared(data, transformedLabels)
 

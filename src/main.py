@@ -43,10 +43,5 @@ labels = enc.transform(labels).toarray()
 
 nn = NeuralNetwork()
 # err = nn.check_error(data)
-j,w = nn.squared_loss_cost_derivative(data,labels)
-print("j: {}, w: {}".format(j,w))
-
-# cost = nn.squared_loss_cost(data, labels)
-# print("cost: {}".format(cost))
-# djdv, djdw = nn.squared_loss_cost_derivative(data, labels)
-# print("djdv: {}, djdw: {}".format(djdv, djdw))
+j,w = nn.squared_loss_derivative(data,labels)
+nn.cross_entropy_derivative(data,labels)

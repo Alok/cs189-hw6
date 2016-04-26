@@ -71,12 +71,28 @@ class NeuralNetwork(object):
         print("err_rate: {}".format(err_rate))
         return err_rate
 
-    def squared_loss_cost(self, X, y):
-        self.y_hat = self.forward(X)
-        J = .5 * np.sum((y - self.y_hat)**2)
-        return J
+    def squared_loss(self, X, y):
+        # self.y_hat = self.forward(X)
+        # J = .5 * np.sum((y - self.y_hat)**2)
+        # return J
 
-    def squared_loss_cost_derivative(self, X, y):
+        self.y_hat = self.forward(X)
+        loss = 0.5 * sum(sum((y.T - self.y_hat)**2))
+        return loss
+
+    def cross_entropy_loss(self, X, y):
+        self.y_hat = self.forward(X)
+        self.y_hat_log = np.log(self.y_hat)
+
+        first_part = np.dot(y, self.y_hat_log)
+
+        one_minus_labels = np.ones(len(y)) - y
+        ln_one_minus_y_hat = np.log(np.ones(len(self.y_hat)) - self.y_hat)
+        second_part = np.dot(one_minus_labels, ln_one_minus_y_hat)
+        return -1 * (first_part + second_part)
+
+
+    def squared_loss_derivative(self, X, y):
         """dJ/dV, dJ/dW"""
         # y: (o, n)
         # a2: (h+1, n)
@@ -86,12 +102,49 @@ class NeuralNetwork(object):
 
         delta3 = -(y.T - self.y_hat) * s_prime(self.z3)
 
+
         dJdW = np.dot(self.a2, delta3.T)
+        # dJdW = np.dot(delta3, self.a2.T)
+        # print("dJdW: {}".format(dJdW))
 
         # TODO add np.multiply on outside
         # delta2 = np.dot(delta3.T, self.W) * tanh_prime(self.z2)
         delta2 = np.dot(self.W.T, delta3) * tanh_prime(self.z2)
-        # dJdV = np.dot(X, delta2.T)
+        # delta2 = np.dot(delta3, self.W) * tanh_prime(self.z2)
         dJdV = np.dot(delta2, X)
+        # dJdV = np.dot(X, delta2.T)
+        # dJdV = np.dot(delta2, X.T)
+        print("np.unique(dJdV): {}".format(np.unique(dJdV)))
 
         return dJdV, dJdW
+
+    def cross_entropy_derivative(self, X, y):
+        # y: (o, n)
+        # a2: (h+1, n)
+        # delta3:(o,n)
+        # z2: (h+1, n)
+        self.y_hat = self.forward(X)
+
+        delta3 = -(y.T - self.y_hat)
+
+        dJdW = np.dot(self.a2, delta3.T)
+        # dJdW = np.dot(delta3, self.a2.T)
+        # print("dJdW: {}".format(dJdW))
+
+        # TODO add np.multiply on outside
+        # delta2 = np.dot(delta3.T, self.W) * tanh_prime(self.z2)
+        delta2 = np.dot(self.W.T, delta3) * tanh_prime(self.z2)
+        # delta2 = np.dot(delta3, self.W) * tanh_prime(self.z2)
+        dJdV = np.dot(delta2, X)
+        # dJdV = np.dot(X, delta2.T)
+        # dJdV = np.dot(delta2, X.T)
+        # print("np.unique(dJdV): {}".format(np.unique(dJdV)))
+
+        return dJdV, dJdW
+
+def train(X, y, net=None):
+    if net is None:
+        net = NeuralNetwork()
+
+    # while criteria, trian
+
