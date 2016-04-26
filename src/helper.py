@@ -5,6 +5,7 @@ import math
 import time
 import random
 import os
+import pickle
 import sys
 import subprocess
 import functools
@@ -16,6 +17,8 @@ import matplotlib as plt
 import sklearn
 import numpy as np
 
+from scipy.special import expit
+from numpy import tanh
 from pudb import set_trace
 from sklearn.utils import shuffle
 
@@ -27,10 +30,9 @@ def timestamp():
 
 
 def benchmark(pred_labels, true_labels):
-    errors = pred_labels != true_labels
-    err_rate = sum(errors) / float(len(true_labels))
-    indices = errors.nonzero()
-    return err_rate, indices
+    errors = [i for i in range(len(pred_labels)) if pred_labels[i] != true_labels[i]]
+    err_rate = len(errors) / len(true_labels)
+    return err_rate
 
 def create_cross_validation_sets(data, labels, k = 2/3):
     shuffled_data, shuffled_labels = shuffle(data, labels)
@@ -57,3 +59,11 @@ def pickle_tree(obj, name):
     pickle_file.close()
     pickle_file_unique.close()
 
+def add_bias(arr, bias_term = 1):
+    return np.insert(arr, len(arr[0]), bias_term, axis =1)
+
+def s(x, derivative=False):
+    if derivative:
+        return np.maximum(1e-8, expit(x)) * (np.maximum(1e-8, 1 - expit(x)))
+    else:
+        return np.maximum(1e-8, expit(x))

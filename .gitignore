@@ -12,3 +12,5 @@
 tags
 *.pdf
 *.csv
+/**/*.pickle
+/pickles/
