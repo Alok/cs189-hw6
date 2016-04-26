@@ -42,4 +42,10 @@ enc.fit(labels)
 labels = enc.transform(labels).toarray()
 
 nn = NeuralNetwork(data, labels)
-err = nn.check_error(data)
+# err = nn.check_error(data)
+nn.forward(data)
+
+# cost = nn.squared_loss_cost(data, labels)
+# print("cost: {}".format(cost))
+# djdv, djdw = nn.squared_loss_cost_derivative(data, labels)
+# print("djdv: {}, djdw: {}".format(djdv, djdw))

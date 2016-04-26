@@ -74,9 +74,15 @@ def s(x, derivative=False):
     else:
         return np.maximum(1e-8, expit(x))
 
+def s_prime(x):
+    return np.maximum(1e-8, expit(x)) * (np.maximum(1e-8, 1 - expit(x)))
+
 
 def tanh(x, derivative=False):
     if derivative:
         return (1 - (np.tanh(x)**2))
     else:
         return np.tanh(x)
+
+def tanh_prime(x):
+    return (1 - (np.tanh(x)**2))
