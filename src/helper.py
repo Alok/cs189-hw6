@@ -67,6 +67,8 @@ def pickle_tree(obj, name):
 def add_bias(arr, bias_term=1):
     return np.insert(arr, len(arr[0]), bias_term, axis=1)
 
+def add_bias_row(arr, bias_term=1):
+    return np.insert(arr, len(arr), 1, axis=0)
 
 def s(x, derivative=False):
     if derivative:

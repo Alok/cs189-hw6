@@ -41,9 +41,10 @@ enc = OneHotEncoder()
 enc.fit(labels)
 labels = enc.transform(labels).toarray()
 
-nn = NeuralNetwork(data, labels)
+nn = NeuralNetwork()
 # err = nn.check_error(data)
-nn.forward(data)
+j,w = nn.squared_loss_cost_derivative(data,labels)
+print("j: {}, w: {}".format(j,w))
 
 # cost = nn.squared_loss_cost(data, labels)
 # print("cost: {}".format(cost))
