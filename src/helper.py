@@ -30,40 +30,53 @@ def timestamp():
 
 
 def benchmark(pred_labels, true_labels):
-    errors = [i for i in range(len(pred_labels)) if pred_labels[i] != true_labels[i]]
+    errors = [i for i in range(len(pred_labels)) if not np.array_equal(
+        pred_labels[i], true_labels[i])]
     err_rate = len(errors) / len(true_labels)
     return err_rate
 
-def create_cross_validation_sets(data, labels, k = 2/3):
+
+def create_cross_validation_sets(data, labels, k=2 / 3):
     shuffled_data, shuffled_labels = shuffle(data, labels)
 
     t = math.floor(len(data) * k)
 
-    left_data     = shuffled_data[:t]
-    right_data  = shuffled_data[t:]
+    left_data = shuffled_data[:t]
+    right_data = shuffled_data[t:]
 
-    left_labels     = shuffled_labels[:t]
-    right_labels  = shuffled_labels[t:]
+    left_labels = shuffled_labels[:t]
+    right_labels = shuffled_labels[t:]
 
     validation_set = (right_data, right_labels)
     training_set = (left_data, left_labels)
 
     return (training_set, validation_set)
 
+
 def pickle_tree(obj, name):
     """saves an object in 2 files, one with a (almost certainly) unique timestamp"""
-    pickle_file_unique = open('./pickles/' + name + timestamp() + '.pickle', 'wb')
+    pickle_file_unique = open('./pickles/' + name +
+                              timestamp() + '.pickle', 'wb')
     pickle_file = open('./pickles/' + name + '.pickle', 'wb')
     pickle.dump(obj, pickle_file)
     pickle.dump(obj, pickle_file_unique)
     pickle_file.close()
     pickle_file_unique.close()
 
-def add_bias(arr, bias_term = 1):
-    return np.insert(arr, len(arr[0]), bias_term, axis =1)
+
+def add_bias(arr, bias_term=1):
+    return np.insert(arr, len(arr[0]), bias_term, axis=1)
+
 
 def s(x, derivative=False):
     if derivative:
         return np.maximum(1e-8, expit(x)) * (np.maximum(1e-8, 1 - expit(x)))
     else:
         return np.maximum(1e-8, expit(x))
+
+
+def tanh(x, derivative=False):
+    if derivative:
+        return (1 - (np.tanh(x)**2))
+    else:
+        return np.tanh(x)

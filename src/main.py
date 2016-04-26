@@ -42,5 +42,4 @@ enc.fit(labels)
 labels = enc.transform(labels).toarray()
 
 nn = NeuralNetwork(data, labels)
-t = nn.forward()
-err = nn.check_error()
+err = nn.check_error(data)
