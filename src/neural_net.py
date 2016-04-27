@@ -47,7 +47,6 @@ class NeuralNetwork(object):
 
         # TODO issues with tanh, clamp vals?
         self.a2 = tanh(self.z2)
-        # self.a2 = add_bias_row(self.a2) # (h+1, n)
 
         self.z3 = np.dot(self.W, self.a2)
         self.y_hat = s(self.z3)
@@ -55,7 +54,7 @@ class NeuralNetwork(object):
         return self.y_hat
 
     def predict(self, X):
-        self.y_hat = self.forward(X)
+        self.y_hat = self.forward(X).T
         def convert_prediction(z):
             return 1 if z > .5 else 0
 
@@ -68,13 +67,9 @@ class NeuralNetwork(object):
         predictions = self.predict(X)
         true_labels = y
         err_rate = benchmark(predictions, true_labels)
-        print("err_rate: {}".format(err_rate))
         return err_rate
 
     def squared_loss(self, X, y):
-        # self.y_hat = self.forward(X)
-        # J = .5 * np.sum((y - self.y_hat)**2)
-        # return J
 
         self.y_hat = self.forward(X)
         loss = 0.5 * sum(sum((y.T - self.y_hat)**2))
@@ -99,22 +94,19 @@ class NeuralNetwork(object):
         # delta3:(o,n)
         # z2: (h+1, n)
         self.y_hat = self.forward(X)
+        X = add_bias(X)
 
-        delta3 = -(y.T - self.y_hat) * s_prime(self.z3)
+        delta3 = (self.y_hat - y.T) * s_prime(self.z3)
 
+        # dJdW = np.dot(self.a2, delta3.T)
+        dJdW = np.dot(delta3, self.a2.T)
 
-        dJdW = np.dot(self.a2, delta3.T)
-        # dJdW = np.dot(delta3, self.a2.T)
-        # print("dJdW: {}".format(dJdW))
-
-        # TODO add np.multiply on outside
-        # delta2 = np.dot(delta3.T, self.W) * tanh_prime(self.z2)
         delta2 = np.dot(self.W.T, delta3) * tanh_prime(self.z2)
-        # delta2 = np.dot(delta3, self.W) * tanh_prime(self.z2)
+        # delta2 = np.dot(delta3.T, self.W) * tanh_prime(self.z2)
+
         dJdV = np.dot(delta2, X)
-        # dJdV = np.dot(X, delta2.T)
-        # dJdV = np.dot(delta2, X.T)
-        print("np.unique(dJdV): {}".format(np.unique(dJdV)))
+        dJdV = np.delete(dJdV,-1,axis=0)
+        # print("np.unique(dJdV): {}".format(np.unique(dJdV)))
 
         return dJdV, dJdW
 
@@ -128,23 +120,33 @@ class NeuralNetwork(object):
         delta3 = -(y.T - self.y_hat)
 
         dJdW = np.dot(self.a2, delta3.T)
-        # dJdW = np.dot(delta3, self.a2.T)
-        # print("dJdW: {}".format(dJdW))
 
         # TODO add np.multiply on outside
-        # delta2 = np.dot(delta3.T, self.W) * tanh_prime(self.z2)
         delta2 = np.dot(self.W.T, delta3) * tanh_prime(self.z2)
-        # delta2 = np.dot(delta3, self.W) * tanh_prime(self.z2)
+
         dJdV = np.dot(delta2, X)
-        # dJdV = np.dot(X, delta2.T)
-        # dJdV = np.dot(delta2, X.T)
         # print("np.unique(dJdV): {}".format(np.unique(dJdV)))
 
         return dJdV, dJdW
 
-def train(X, y, net=None):
-    if net is None:
-        net = NeuralNetwork()
+    def train(self, X, y, backprop_fn, epsilon = .001, num_iterations = 50000):
 
-    # while criteria, trian
+        # while criteria, train
+        for iteration in range(num_iterations):
+            if iteration%10000==0:
+                pickle_obj(self)
+            if iteration%1000==0:
+                print("iteration: {}".format(iteration))
+                print("squared loss(X, y): {:.1f}".format(self.squared_loss(X, y)))
+                print("error: {:g}%".format(100 * self.check_error(X, y)))
+            indices = np.random.choice(len(X), 50)
+            mini_batch_data = X[indices]
+            mini_batch_labels = y[indices]
 
+            dJdV, dJdW = backprop_fn(mini_batch_data, mini_batch_labels)
+
+            self.W = self.W - epsilon * dJdW
+            self.V = self.V - epsilon * dJdV
+        return self
+
+# kfold and predict on test set

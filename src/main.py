@@ -19,11 +19,11 @@ import numpy as np
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import scale as normalize
 from pudb import set_trace
-from neural_net import NeuralNetwork
+from neural_net import *
 
 # seed random numbers to make calculation
 # deterministic (just a good practice)
-np.random.seed(1)
+# np.random.seed(1)
 
 data = sio.loadmat("./dataset/train.mat")['train_images']
 
@@ -45,3 +45,4 @@ nn = NeuralNetwork()
 # err = nn.check_error(data)
 j,w = nn.squared_loss_derivative(data,labels)
 nn.cross_entropy_derivative(data,labels)
+nn = nn.train(data, labels, backprop_fn=nn.squared_loss_derivative, epsilon =0.0005, num_iterations = 100000)

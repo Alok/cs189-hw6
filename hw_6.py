@@ -91,7 +91,7 @@ class NeuralNetwork(object):
         return dJdW, dJdV
 
     def crossEntropyLoss(self, inputs, labels):
-        yHat = self.foward(inputs)
+        yHat = self.forward(inputs)
         yHatLn = np.log(yHat)
 
         firstPart = np.dot(labels, yHatLn)

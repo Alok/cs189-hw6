@@ -30,8 +30,7 @@ def timestamp():
 
 
 def benchmark(pred_labels, true_labels):
-    errors = [i for i in range(len(pred_labels)) if not np.array_equal(
-        pred_labels[i], true_labels[i])]
+    errors = [i for i in range(len(pred_labels)) if not np.array_equal(pred_labels[i], true_labels[i])]
     err_rate = len(errors) / len(true_labels)
     return err_rate
 
@@ -53,11 +52,10 @@ def create_cross_validation_sets(data, labels, k=2 / 3):
     return (training_set, validation_set)
 
 
-def pickle_tree(obj, name):
+def pickle_obj(obj):
     """saves an object in 2 files, one with a (almost certainly) unique timestamp"""
-    pickle_file_unique = open('./pickles/' + name +
-                              timestamp() + '.pickle', 'wb')
-    pickle_file = open('./pickles/' + name + '.pickle', 'wb')
+    pickle_file_unique = open('./pickles/' + timestamp() + '.pickle', 'wb')
+    pickle_file = open('./pickles/' + '.pickle', 'wb')
     pickle.dump(obj, pickle_file)
     pickle.dump(obj, pickle_file_unique)
     pickle_file.close()
