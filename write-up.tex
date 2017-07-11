@@ -1,0 +1,70 @@
+\documentclass[11pt, parindent=0]{article}
+\usepackage{mathrsfs,listings,hyperref,backref,amsmath,amsfonts,textcomp,amssymb,geometry,graphicx,enumerate,algorithm,algorithmicx,pdfsync,pdfpages}
+\usepackage[noend]{algpseudocode}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage[parfill]{parskip}
+\graphicspath{{./fig/}}
+\pagenumbering{roman}
+\synctex=1
+
+\def\Name{Alok Singh}
+\def\SID{24456212}
+\def\Homework{6}
+\def\Session{Spring 2016}
+\def\Class{CS 189}
+
+\title{\Class --- \Session --- HW \Homework\ Solutions} \author{\Name, SID
+\SID}
+\date{}
+\textheight=9in
+\textwidth=6.5in
+\topmargin=-.75in
+\leftmargin=0.1in
+\rightmargin=0.1in
+\oddsidemargin=0.25in
+\evensidemargin=0.25in
+
+\begin{document}
+\maketitle
+
+\section*{1}
+\label{sec:1}
+
+\includepdf[pages=-]{hw6_explain.pdf}
+% \centerline{\includegraphics{1}}
+% \centerline{\includegraphics{2}}
+% \centerline{\includegraphics{3}}
+
+\section*{2}
+\label{sec:2}
+
+
+\begin{enumerate}[(a)]
+    \item I used a learning rate of .001, 5000 iterations, mini-batches of 400, and uniform random initialization of weights.
+    \item I got a training accuracy of about 95\% using MSE and less than 1\% using cross-entropy, both for 5000 iterations. My validation accuracy was similar but took something like 250,000 iterations. I got 95\% on kaggle, 203 place.
+    \item It took about 2 minutes to train with mini-batch.
+    \item I had some issue with matplotlib and no images were generated.
+    % \item \includegraphics{}
+    % \item \includegraphics{}
+    % \item \includegraphics{}
+    % \item \includegraphics{}
+    \item Cross entropy is both faster to converge and faster to train.
+\end{enumerate}
+
+\section*{3}
+\label{sec:3}
+
+ I just used mini batch with size 400. Saved so much time in training.
+
+
+\section*{Appendix}
+\label{sec:appendix}
+
+\lstinputlisting[language=Python, breaklines=true]{src/main.py}
+\lstinputlisting[language=Python, breaklines=true]{src/helper.py}
+\lstinputlisting[language=Python, breaklines=true]{src/neural_net.py}
+
+
+
+\end{document}

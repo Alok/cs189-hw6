@@ -35,10 +35,10 @@ def benchmark(pred_labels, true_labels):
     return err_rate
 
 
-def create_cross_validation_sets(data, labels, k=2 / 3):
+def create_cross_validation_sets(data, labels, k=50000):
     shuffled_data, shuffled_labels = shuffle(data, labels)
 
-    t = math.floor(len(data) * k)
+    t = k
 
     left_data = shuffled_data[:t]
     right_data = shuffled_data[t:]
@@ -86,3 +86,6 @@ def tanh(x, derivative=False):
 
 def tanh_prime(x):
     return (1 - (np.tanh(x)**2))
+
+def unbinarize_predictions(y):
+    return [np.argmax(i) for i in y]
